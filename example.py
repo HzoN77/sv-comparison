@@ -6,11 +6,14 @@ import seaborn as sns
 def plot_distributions(dataDistribution, dataLabels, outlierLabel):
     fig, ax1 = plt.subplots(figsize=(7, 4))
     plottingLegends = ['inliers', 'outliers']
-    sns.distplot(dataDistribution[dataLabels != outlierLabel])
-    sns.distplot(dataDistribution[dataLabels == outlierLabel])
+    sns.distplot(dataDistribution[dataLabels != outlierLabel], ax=ax1, bins=30,
+                 hist_kws={"label": plottingLegends[0]})
+    sns.distplot(dataDistribution[dataLabels == outlierLabel], ax=ax1, bins=30,
+                 hist_kws={"label": plottingLegends[1]})
 
     ax1.legend()
     ax1.set_xlabel('Anomaly score')
+    plt.grid()
     plt.draw()
 
 
