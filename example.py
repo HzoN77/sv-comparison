@@ -2,13 +2,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-
-def plot_distributions(dataDistribution, dataLabels, outlierLabel):
+def plot_distributions(anomalyDistribution, dataLabels, outlierLabel):
     fig, ax1 = plt.subplots(figsize=(7, 4))
     plottingLegends = ['inliers', 'outliers']
-    sns.distplot(dataDistribution[dataLabels != outlierLabel], ax=ax1, bins=30,
+    sns.distplot(anomalyDistribution[dataLabels != outlierLabel], ax=ax1, bins=30,
                  hist_kws={"label": plottingLegends[0]})
-    sns.distplot(dataDistribution[dataLabels == outlierLabel], ax=ax1, bins=30,
+    sns.distplot(anomalyDistribution[dataLabels == outlierLabel], ax=ax1, bins=30,
                  hist_kws={"label": plottingLegends[1]})
 
     ax1.legend()
