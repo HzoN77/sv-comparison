@@ -35,4 +35,4 @@ if __name__=="__main__":
     labels = np.concatenate([labelsIn, labelsOOD])
     trueLabels = np.concatenate([trueLabelsInlier, trueLabelsOutlier])
 
-    plot_distributions(anomalyScores, labels, outlierLabel)
+    plot_distributions(anomalyScores, trueLabels, outlierLabel)
