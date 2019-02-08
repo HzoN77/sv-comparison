@@ -15,6 +15,33 @@ def plot_distributions(anomalyDistribution, dataLabels, outlierLabel):
     plt.grid()
     plt.draw()
 
+def plot_ROC_curve(anomalyDistribution, labels, outlierLabel, bins=500):
+
+    fpr = np.zeros(bins)
+    tpr = np.zeros(bins)
+
+    for i, th in zip(range(bins), np.linspace(anomalyDistribution.max(), anomalyDistribution.min(), bins)):
+        tp = float(anomalyDistribution[(labels == outlierLabel) & (anomalyDistribution > th)].shape[0])
+        tn = float(anomalyDistribution[(labels != outlierLabel) & (anomalyDistribution < th)].shape[0])
+        fp = float(anomalyDistribution[(labels != outlierLabel) & (anomalyDistribution > th)].shape[0])
+        fn = float(anomalyDistribution[(labels == outlierLabel) & (anomalyDistribution < th)].shape[0])
+
+        if fp > 0:
+            fpr[i] = fp / (tn + fp)
+        if tp > 0:
+            tpr[i] = tp / (tp + fn)
+
+    auroc = np.trapz(tpr, fpr)
+
+    # plot ROC
+    fig, ax1 = plt.subplots(figsize=(7, 4))
+    plt.plot(fpr, tpr, 'b-')
+    plt.title('area under curve = ' + str(round(auroc, 3)))
+    plt.xlabel('FPR')
+    plt.ylabel('TPR')
+    plt.grid()
+    plt.draw()
+
 
 if __name__=="__main__":
     # Make an example anomaly score distribution, and split between them.
@@ -38,3 +65,4 @@ if __name__=="__main__":
     trueLabels = np.concatenate([trueLabelsInlier, trueLabelsOutlier])
 
     plot_distributions(anomalyScores, trueLabels, outlierLabel)
+    plot_ROC_curve(anomalyScores, trueLabels, outlierLabel)
