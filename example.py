@@ -23,8 +23,8 @@ if __name__=="__main__":
     outlierLabel = 123
 
     # Create two normal distributions, one Inlier and one Outlier.
-    anomalyScoreInlier = np.random.normal(1, 1, numSamples)
-    anomalyScoreOutlier = np.random.normal(6, 1, numSamples)
+    anomalyScoreInlier = np.random.normal(2, 2, numSamples)
+    anomalyScoreOutlier = np.random.normal(4, 2, numSamples)
 
     # Create random labels for the distributions
     labelsIn = np.random.randint(0, numLabels, numSamples)
