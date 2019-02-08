@@ -1,4 +1,17 @@
 import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+def plot_distributions(dataDistribution, dataLabels, outlierLabel):
+    fig, ax1 = plt.subplots(figsize=(7, 4))
+    plottingLegends = ['inliers', 'outliers']
+    sns.distplot(dataDistribution[dataLabels != outlierLabel])
+    sns.distplot(dataDistribution[dataLabels == outlierLabel])
+
+    ax1.legend()
+    ax1.set_xlabel('Anomaly score')
+    plt.draw()
 
 
 if __name__=="__main__":
@@ -21,3 +34,5 @@ if __name__=="__main__":
     anomalyScores = np.concatenate([anomalyScoreInlier, anomalyScoreOutlier])
     labels = np.concatenate([labelsIn, labelsOOD])
     trueLabels = np.concatenate([trueLabelsInlier, trueLabelsOutlier])
+
+    plot_distributions(anomalyScores, labels, outlierLabel)
