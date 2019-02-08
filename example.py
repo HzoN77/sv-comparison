@@ -42,6 +42,34 @@ def plot_ROC_curve(anomalyDistribution, labels, outlierLabel, bins=500):
     plt.grid()
     plt.draw()
 
+def plot_precision_recall_curve(anomalyDistribution, labels, outlierLabel, bins=500):
+
+    precision = np.ones(bins)
+    recall = np.zeros(bins)  # recall is another name for true positive rate.
+
+    for i, th in zip(range(bins), np.linspace(anomalyDistribution.max(), anomalyDistribution.min(), bins)):
+        tp = float(anomalyDistribution[(labels == outlierLabel) & (anomalyDistribution > th)].shape[0])
+        tn = float(anomalyDistribution[(labels != outlierLabel) & (anomalyDistribution < th)].shape[0])
+        fp = float(anomalyDistribution[(labels != outlierLabel) & (anomalyDistribution > th)].shape[0])
+        fn = float(anomalyDistribution[(labels == outlierLabel) & (anomalyDistribution < th)].shape[0])
+
+        if tp > 0:
+            precision[i] = tp/(tp + fp)
+        if tp > 0:
+            recall[i] = tp / (tp + fn)
+
+    aupr = np.trapz(precision, recall)
+
+    # Plot precision-recall curve
+    fig, ax1 = plt.subplots(figsize=(7, 4))
+    plt.plot(recall, precision, 'b-')
+    plt.title('area under PR-curve= ' + str(round(aupr, 3)))
+    plt.xlabel('recall')
+    plt.ylabel('precision')
+    plt.grid()
+    plt.draw()
+
+
 
 if __name__=="__main__":
     # Make an example anomaly score distribution, and split between them.
@@ -66,3 +94,4 @@ if __name__=="__main__":
 
     plot_distributions(anomalyScores, trueLabels, outlierLabel)
     plot_ROC_curve(anomalyScores, trueLabels, outlierLabel)
+    plot_precision_recall_curve(anomalyScores, trueLabels, outlierLabel)
