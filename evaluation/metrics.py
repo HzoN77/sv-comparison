@@ -16,8 +16,8 @@ class MetricPlots(object):
             self.bins = bins
             self.tpr, self.fpr, self.precision = self.calculate_roc_metrics()
 
-    def calculate_roc_values(self, bins=None):
-        if not bins:
+    def calculate_roc_metrics(self, bins=None):
+        if bins is None:
             bins = self.bins
 
         fpr = np.zeros(bins)
