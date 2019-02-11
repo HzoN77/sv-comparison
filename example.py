@@ -1,7 +1,6 @@
 import numpy as np
 
-from evaluation.metrics import plot_distributions, plot_ROC_curve, plot_precision_recall_curve, \
-    plot_risk_vs_coverage_curve
+from evaluation.metrics import MetricPlots
 
 if __name__=="__main__":
     # Make an example anomaly score distribution, and split between them.
@@ -24,8 +23,8 @@ if __name__=="__main__":
     predictions = np.concatenate([predictionsInlier, predictionsOutliers])
     trueLabels = np.concatenate([trueLabelsInlier, trueLabelsOutlier])
 
-    plot_distributions(anomalyScores, trueLabels, outlierLabel)
-    plot_ROC_curve(anomalyScores, trueLabels, outlierLabel)
-    plot_precision_recall_curve(anomalyScores, trueLabels, outlierLabel)
-    plot_risk_vs_coverage_curve(anomalyScores, predictions, trueLabels, outlierLabel)
-
+    mp = MetricPlots(anomalyScores, predictions, trueLabels, outlierLabel)
+    mp.plot_distributions()
+    mp.plot_ROC_curve()
+    mp.plot_precision_recall_curve()
+    mp.plot_risk_vs_coverage_curve()
