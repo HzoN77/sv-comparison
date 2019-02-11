@@ -15,6 +15,7 @@ class MetricPlots(object):
             self.outlierLabel = outlierLabel
             self.bins = bins
             self.tpr, self.fpr, self.precision = self.calculate_roc_metrics()
+            self.risk, self.coverage = self.calculate_risk_coverage_metrics()
 
     def calculate_roc_metrics(self, bins=None):
         if bins is None:
@@ -36,6 +37,23 @@ class MetricPlots(object):
                 precision[i] = tp / (tp + fp)
 
         return tpr, fpr, precision
+
+    def calculate_risk_coverage_metrics(self, bins=None):
+        if bins is None:
+            bins = self.bins
+
+        risk = np.empty(bins)
+        coverage = np.empty(bins)
+        nbrOutliersLeft = np.empty(bins)
+        threshold = np.linspace(self.anomalyScoreData.max(), self.anomalyScoreData.min(), bins)
+
+        for i, th in zip(range(bins), threshold):
+            idx = self.anomalyScoreData <= th
+            coverage[i] = sum(idx) / len(self.trueLabels)
+            risk[i] = (~np.equal(self.predictionLabels[idx], self.trueLabels[idx])).sum() / sum(idx)
+            nbrOutliersLeft[i] = np.sum((idx == True) & (self.trueLabels == self.outlierLabel))
+
+        return risk, coverage
 
     def plot_distributions(self, bins=30):
         fig, ax1 = plt.subplots(figsize=(7, 4))
@@ -83,21 +101,12 @@ class MetricPlots(object):
     def plot_risk_vs_coverage_curve(self, bins=500):
         # Function that plots the coverage varying over risk exposure. Risk is defined as the chance to miss-classify an
         # an input.
-
-        risk = np.empty(bins)
-        coverage = np.empty(bins)
-        nbrOutliersLeft = np.empty(bins)
-        threshold = np.linspace(self.anomalyScoreData.max(), self.anomalyScoreData.min(), bins)
-
-        for i, th in zip(range(bins), threshold):
-            idx = self.anomalyScoreData <= th
-            coverage[i] = sum(idx) / len(self.trueLabels)
-            risk[i] = (~np.equal(self.predictionLabels[idx], self.trueLabels[idx])).sum() / sum(idx)
-            nbrOutliersLeft[i] = np.sum((idx == True) & (self.trueLabels == self.outlierLabel))
+        if bins != self.bins:
+            self.calculate_roc_metrics(bins=bins)  # Update fpr, tpr and precision.
 
         # plot risk-coverage
         fig, ax1 = plt.subplots(figsize=(7, 4))
-        plt.plot(coverage, risk)
+        plt.plot(self.coverage, self.risk)
         plt.xlabel('coverage')
         plt.ylabel('risk')
         plt.grid()
