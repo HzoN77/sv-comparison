@@ -69,7 +69,28 @@ def plot_precision_recall_curve(anomalyDistribution, labels, outlierLabel, bins=
     plt.grid()
     plt.draw()
 
+def plot_risk_vs_coverage_curve(anomalyDistribution, predictions, labels, outlierLabel, bins=500):
+    # Function that plots the coverage varying over risk exposure. Risk is defined as the chance to miss-classify an
+    # an input.
 
+    risk = np.empty(bins)
+    coverage = np.empty(bins)
+    nbrOutliersLeft = np.empty(bins)
+    threshold = np.linspace(anomalyDistribution.max(), anomalyDistribution.min(), bins)
+
+    for i, th in zip(range(bins), threshold):
+        idx = anomalyDistribution <= th
+        coverage[i] = sum(idx) / len(labels)
+        risk[i] = (~np.equal(predictions[idx], labels[idx])).sum() / sum(idx)
+        nbrOutliersLeft[i] = np.sum((idx == True) & (labels == outlierLabel))
+
+    # plot risk-coverage
+    fig, ax1 = plt.subplots(figsize=(7, 4))
+    plt.plot(coverage, risk)
+    plt.xlabel('coverage')
+    plt.ylabel('risk')
+    plt.grid()
+    plt.draw()
 
 if __name__=="__main__":
     # Make an example anomaly score distribution, and split between them.
@@ -95,3 +116,5 @@ if __name__=="__main__":
     plot_distributions(anomalyScores, trueLabels, outlierLabel)
     plot_ROC_curve(anomalyScores, trueLabels, outlierLabel)
     plot_precision_recall_curve(anomalyScores, trueLabels, outlierLabel)
+    plot_risk_vs_coverage_curve(anomalyScores, labels, trueLabels, outlierLabel)
+
