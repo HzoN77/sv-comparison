@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
-
+import os
 
 def imshow(img):
     img = img / 2 + 0.5  # Unnormalize from transform.
@@ -59,6 +59,11 @@ if __name__=="__main__":
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
+    # Create save directory
+    modelpath = './models/saved/cifar10'
+    if not os.path.isdir(modelpath):
+        os.mkdir(modelpath)
+
     # Train the network
     for epoch in range(2):  # loop over the dataset multiple times
 
@@ -82,5 +87,6 @@ if __name__=="__main__":
                 print('[%d, %5d] loss: %.3f' %
                       (epoch + 1, i + 1, running_loss / 2000))
                 running_loss = 0.0
+        torch.save(net.state_dict(), os.path.join(modelpath, 'simple-net-epoch-{}.pth'.format(epoch)))
 
     print('Finished Training')
