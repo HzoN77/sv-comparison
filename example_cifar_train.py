@@ -54,3 +54,7 @@ if __name__=="__main__":
 
     # Define a network
     net = Net()
+
+    # Define a loss function and optimizer
+    criterion = nn.CrossEntropyLoss()
+    optimizer = torch.optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
