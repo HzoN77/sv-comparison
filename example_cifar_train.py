@@ -64,6 +64,12 @@ if __name__=="__main__":
     if not os.path.isdir(modelpath):
         os.mkdir(modelpath)
 
+    import os
+    os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+    device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
+    print("Device set to", device)
+    net.to(device)
+
     # Train the network
     for epoch in range(2):  # loop over the dataset multiple times
 
@@ -71,6 +77,7 @@ if __name__=="__main__":
         for i, data in enumerate(trainloader, 0):
             # get the inputs
             inputs, labels = data
+            inputs, labels = inputs.to(device), labels.to(device)
 
             # zero the parameter gradients
             optimizer.zero_grad()
