@@ -10,6 +10,7 @@ import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
 import os
+from utils.pytorch_eval import pytorch_train
 
 def imshow(img):
     img = img / 2 + 0.5  # Unnormalize from transform.
@@ -71,29 +72,9 @@ if __name__=="__main__":
     net.to(device)
 
     # Train the network
-    for epoch in range(2):  # loop over the dataset multiple times
-
-        running_loss = 0.0
-        for i, data in enumerate(trainloader, 0):
-            # get the inputs
-            inputs, labels = data
-            inputs, labels = inputs.to(device), labels.to(device)
-
-            # zero the parameter gradients
-            optimizer.zero_grad()
-
-            # forward + backward + optimize
-            outputs = net(inputs)
-            loss = criterion(outputs, labels)
-            loss.backward()
-            optimizer.step()
-
-            # print statistics
-            running_loss += loss.item()
-            if i % 2000 == 1999:  # print every 2000 mini-batches
-                print('[%d, %5d] loss: %.3f' %
-                      (epoch + 1, i + 1, running_loss / 2000))
-                running_loss = 0.0
-        torch.save(net.state_dict(), os.path.join(modelpath, 'simple-net-epoch-{}.pth'.format(epoch)))
+    for epoch in range(10):
+        pytorch_train(model=net, dataloader=trainloader, device=device,
+                      optimizer=optimizer, criterion=criterion, epoch=epoch)
+    torch.save(net.state_dict(), os.path.join(modelpath, 'simpleNet-{}-epochs.pth'.format(10)))
 
     print('Finished Training')
