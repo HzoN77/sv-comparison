@@ -1,6 +1,6 @@
 import numpy as np
 
-from evaluation.metrics import MetricPlots
+from utils.metrics import MetricPlots
 
 if __name__=="__main__":
     # Make an example anomaly score distribution, and split between them.
