@@ -6,7 +6,7 @@ if __name__=="__main__":
     # Make an example anomaly score distribution, and split between them.
     numSamples = 1000
     numLabels = 10
-    outlierLabel = 123
+    outlierLabel = -1
 
     # Create two normal distributions, one Inlier and one Outlier.
     anomalyScoreInlier = np.random.normal(2, 2, numSamples)
