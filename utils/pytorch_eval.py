@@ -27,6 +27,7 @@ def pytorch_train(model, dataloader, device, optimizer, criterion, epoch=0):
 
 def pytorch_test(model, device, dataloader):
     model.eval()
+    model.to(device)
     test_loss = 0.0
     correct = 0
     with torch.no_grad():
@@ -48,6 +49,7 @@ def pytorch_test(model, device, dataloader):
 
 def pytorch_predict(model, device, dataloader, return_labels=True):
     model.eval()
+    model.to(device)
     preds = []
     targets = []
     with torch.no_grad():
