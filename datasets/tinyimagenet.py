@@ -33,8 +33,7 @@ class TinyImageNet(data.Dataset):
 
     def __getitem__(self, index):
         label = self.labels[index]
-        img = Image.open(self.paths[index])
-        img = img.convert('RGB')
+        img = Image.open(self.paths[index]).convert('RGB')
 
         if self.transform is not None:
             img = self.transform(img)
