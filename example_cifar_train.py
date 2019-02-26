@@ -10,7 +10,7 @@ import torch.nn as nn
 import os
 
 from models.cifar_example_net import Net
-from utils.pytorch_eval import pytorch_train
+from utils.pytorch_eval import pytorch_train, pytorch_test
 
 def imshow(img):
     img = img / 2 + 0.5  # Unnormalize from transform.
@@ -59,6 +59,8 @@ if __name__=="__main__":
     for epoch in range(10):
         pytorch_train(model=net, dataloader=trainloader, device=device,
                       optimizer=optimizer, criterion=criterion, epoch=epoch)
+        pytorch_test(model=net, device=device, dataloader=testloader)
+
     torch.save(net.state_dict(), os.path.join(modelpath, 'simpleNet-{}-epochs.pth'.format(10)))
 
     print('Finished Training')
