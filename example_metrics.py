@@ -1,6 +1,7 @@
 import numpy as np
 
 from utils.metrics import MetricPlots
+import matplotlib.pyplot as plt
 
 if __name__=="__main__":
     # Make an example anomaly score distribution, and split between them.
@@ -28,3 +29,4 @@ if __name__=="__main__":
     mp.plot_ROC_curve()
     mp.plot_precision_recall_curve()
     mp.plot_risk_vs_coverage_curve()
+    plt.show()  # Ensure program wont exit until plots are closed.
