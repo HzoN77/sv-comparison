@@ -1,6 +1,6 @@
 import torch
 from models.cifar_example_net import Net
-
+import matplotlib.pyplot as plt
 
 if __name__=="__main__":
     # Read in a pre-trained network
@@ -61,9 +61,8 @@ if __name__=="__main__":
     mp = MetricPlots(anomalyScores, predictions, trueLabels, outlierLabel)
 
     # Draw all the plots.
-    import matplotlib.pyplot as plt
     mp.plot_distributions()
     mp.plot_ROC_curve()
     mp.plot_precision_recall_curve()
     mp.plot_risk_vs_coverage_curve()
-    plt.show()
+    plt.show()  # Ensure program is running until plots are closed
