@@ -55,19 +55,38 @@ class TestSupervisorExample(unittest.TestCase):
 
         self.trueLabels = np.concatenate([labelsInlier.cpu().numpy(), labelsOutliers])
 
+        self.mp = MetricPlots(self.anomalyScores, self.predictions, self.trueLabels, self.outlierLabel)
+
     def test_metrics_plot(self):
-        mp = MetricPlots(self.anomalyScores, self.predictions, self.trueLabels, self.outlierLabel)
-        self.assertTrue(mp.fpr[-1] == 1)  # Check that FPR, TPR go from 0 to 1
-        self.assertTrue(mp.tpr[-1] == 1)
 
-        self.assertTrue(mp.fpr[0] == 0)
-        self.assertTrue(mp.tpr[0] == 0)
+        self.assertTrue(self.mp.fpr[-1] == 1)  # Check that FPR, TPR go from 0 to 1
+        self.assertTrue(self.mp.tpr[-1] == 1)
 
-        self.assertTrue(len(mp.tpr) == mp.bins)  # Check that all params are same dimension
-        self.assertTrue(len(mp.fpr) == mp.bins)
-        self.assertTrue(len(mp.precision) == mp.bins)
-        self.assertTrue(len(mp.risk) == mp.bins)
-        self.assertTrue(len(mp.coverage) == mp.bins)
+        self.assertTrue(self.mp.fpr[0] == 0)
+        self.assertTrue(self.mp.tpr[0] == 0)
+
+        self.assertTrue(len(self.mp.tpr) == self.mp.bins)  # Check that all params are same dimension
+        self.assertTrue(len(self.mp.fpr) == self.mp.bins)
+        self.assertTrue(len(self.mp.precision) == self.mp.bins)
+        self.assertTrue(len(self.mp.risk) == self.mp.bins)
+        self.assertTrue(len(self.mp.coverage) == self.mp.bins)
+
+        self.assertTrue(self.mp.risk.max() <= 1)  # Risk between 1 and 0.
+        self.assertTrue(self.mp.risk.min() >= 0)
+
+        self.assertTrue(self.mp.coverage.max() <= 1)  # Risk between 1 and 0.
+        self.assertTrue(self.mp.coverage.min() >= 0)
+
+
+    def test_scores(self):
+        self.assertTrue(len(self.anomalyScores) == len(self.predictions))  # Check that each prediction got one anomaly score
+        self.assertTrue(len(self.anomalyScores) == len(self.trueLabels))
+        self.assertTrue(len(self.trueLabels) == len(self.predictions))
+
+        self.assertTrue(self.anomalyScores.max() <= 1)  # Anomaly scores between 1 and 0.
+        self.assertTrue(self.anomalyScores.min() >= 0)
+
+
 
 
 
