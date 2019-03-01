@@ -8,14 +8,23 @@ class MetricPlots(object):
     Returns a ```Metric&Plots``` object with the option to plot.
 
     """
-    def __init__(self, anomalyScoreData, predictionLabels, trueLabels, outlierLabel, bins=500):
-            self.anomalyScoreData = anomalyScoreData
-            self.predictionLabels = predictionLabels
-            self.trueLabels = trueLabels
-            self.outlierLabel = outlierLabel
-            self.bins = bins
-            self.tpr, self.fpr, self.precision = self.calculate_roc_metrics()
-            self.risk, self.coverage = self.calculate_risk_coverage_metrics()
+    def __init__(self, anomalyScoreData=None, predictionLabels=None, trueLabels=None, outlierLabel=None, bins=500):
+
+        if anomalyScoreData is None or predictionLabels is None or trueLabels is None or outlierLabel is None:
+            raise AssertionError('Missing argument')
+        if len(anomalyScoreData) != len(predictionLabels) or len(anomalyScoreData) != len(trueLabels):
+            raise ValueError('Dimension mismatch')
+        elif len(predictionLabels) != len(trueLabels):
+            raise ValueError('Dimension mismatch')
+
+
+        self.anomalyScoreData = anomalyScoreData
+        self.predictionLabels = predictionLabels
+        self.trueLabels = trueLabels
+        self.outlierLabel = outlierLabel
+        self.bins = bins
+        self.tpr, self.fpr, self.precision = self.calculate_roc_metrics()
+        self.risk, self.coverage = self.calculate_risk_coverage_metrics()
 
     def calculate_roc_metrics(self, bins=None):
         if bins is None:
